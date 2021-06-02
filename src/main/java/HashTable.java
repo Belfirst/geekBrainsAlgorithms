@@ -15,7 +15,6 @@ public class HashTable {
     private void increaseTable(){
         Cat[] oldHashArr = Arrays.copyOf(hashArr,size);
         this.size = getPrime(size);
-        System.out.println(size);
         hashArr = new Cat[size];
         for (Cat cat : oldHashArr) {
             if (cat != null) {
@@ -72,6 +71,7 @@ public class HashTable {
 
     public void insert(Cat cat)
     {
+
         if (full == size) {
             increaseTable();
         }

@@ -15,7 +15,7 @@ public class Test {
         //Задание 8.4
         //На основе данных массива из задания 2.3 реализуйте хеш-таблицу с помощью открытой адресации, а конкретнее метода линейного пробирования
         Cat cat;
-        int size = 50;
+        int size = 10;
         int key;
         Random random = new Random();
         HashTable hashTable = new HashTable(size);

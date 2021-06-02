@@ -5,49 +5,32 @@ public class DoubleHashTable {
     private int size;
     private final Cat EMPTY;
     private int full;
-    final int CONSTANT;
+    private int step;
+    private final double REHASH_SIZE = 0.75;
 
     public DoubleHashTable(int size){
         this.size = size;
         EMPTY = new Cat(-1);
         hashArr = new Cat[size];
-        CONSTANT = 10;
+        this.step = (int)Math.ceil(0.2 * size);
     }
 
     private void increaseTable(){
         Cat[] oldHashArr = Arrays.copyOf(hashArr,size);
-        this.size = getPrime(size);
-        System.out.println(size);
+        this.size = size * 2;
+        this.step = (int)Math.ceil(0.2 * size);
         hashArr = new Cat[size];
+        full = 0;
         for (Cat cat : oldHashArr) {
             if (cat != null) {
                 insert(cat);
             }
         }
-
     }
 
-    private int getPrime(int min)
-    {
-        for (int i = min + 1; true; i++)
-        {
-            if (isPrime(i))
-            {
-                return i;
-            }
-        }
-    }
+    private void reHash(){
+        Cat[] oldHashArr = Arrays.copyOf(hashArr,size);
 
-    private boolean isPrime(int n)
-    {
-        for (int j = 2; (j * j <= n); j++)
-        {
-            if (n % j == 0)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     public void display()
@@ -74,21 +57,24 @@ public class DoubleHashTable {
 
     public int hashFuncDouble(int key)
     {
-        return CONSTANT - key % CONSTANT;
+        return step - key % step;
     }
 
     public void insert(Cat cat)
     {
-        if (full == size) {
+        if (full + 1 > REHASH_SIZE * size) {
             increaseTable();
         }
         int key = cat.getAge();
         int hashVal = hashFunc(key);
         int stepSize = hashFuncDouble(key);
+        int i = 0;
         while (hashArr[hashVal] != null && hashArr[hashVal].getAge()!= -1)
         {
+            if(i > size) increaseTable();
             hashVal += stepSize;
             hashVal %= size;
+            i++;
         }
         hashArr[hashVal] = cat;
         full++;
